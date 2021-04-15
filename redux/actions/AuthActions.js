@@ -17,7 +17,7 @@ export const LogoutAction = () =>{
     return (dispatch) => {
       dispatch(LogoutRequest());
       axios
-          .post("http://192.168.8.195:5000/auth/logout")
+          .post("https://orgapi11.herokuapp.com/auth/logout")
           .then(res => {
               deleteFromStore('token');
               dispatch(LogoutSuccess());
@@ -31,7 +31,7 @@ export const LoginAction = (user) =>{
     return (dispatch) => {
         dispatch(LoginRequest());
         axios
-            .post("http://192.168.8.195:5000/auth/login",user)
+            .post("https://orgapi11.herokuapp.com/auth/login",user)
             .then(res => {
                 saveToStore('token',res.data.Authorization);
                 axios.defaults.headers.common['Authorization'] = res.data.Authorization;
@@ -47,7 +47,7 @@ export const RegisterAction = (user) =>{
     return (dispatch) => {
         dispatch(RegisterRequest());
         axios
-            .post("http://192.168.8.195:5000/user/",user)
+            .post("https://orgapi11.herokuapp.com/user/",user)
             .then(res => {
                 //SecureStore.setItemAsync('access_token',res.data.accessToken);
                 //SecureStore.setItemAsync('refresh_token',res.data.refreshToken);

@@ -10,7 +10,9 @@ import Notifications from './views/Notifications';
 import FriendsList from './views/FriendsList';
 import Messages from './views/Messages';
 import UserProfile from './views/UserProfile';
+import MapPage from './views/MapPage';
 import Header from './components/Header';
+import SearchHeader from './components/SearchHeader';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { connect } from 'react-redux';
@@ -50,7 +52,7 @@ const MainScreen = () => (
   >
     <Main.Screen
       name="Home"
-      component={Homepage} />
+      component={Homepage}/>
     <Main.Screen
       name="Events"
       component={EventPage} />
@@ -72,6 +74,10 @@ const MainScreen = () => (
     <Main.Screen
       name="UserProfile"
       component={UserProfile} />
+    <Main.Screen
+      name="Map"
+      component={MapPage}
+      options={{ headerTitle: () => <SearchHeader/> }} />
   </Main.Navigator>
 );
 
