@@ -15,15 +15,6 @@ function SearchHeader({ currentUser }) {
 
         {/* Searchbar */}
         <View style={styles.searchBar}>
-
-        {/* Search icon */}
-        <TouchableOpacity
-        style={{marginRight:10}}
-        onPress={()=> navigation.navigate("Search")}
-        >
-          <Search stroke="#00BEB3" strokeWidth={2.5} width={24} height={24}/>
-        </TouchableOpacity>
-
           {/* Search input */}
           <TextInput
           style={styles.search}
@@ -32,6 +23,14 @@ function SearchHeader({ currentUser }) {
           placeholderTextColor='#B9B9B9'
           placeholder="Search..."
           />
+          {/* Search icon */}
+        <TouchableOpacity
+        style={styles.searchIcon}
+        onPress={()=> navigation.navigate("Search")}
+        >
+          <Search stroke="#fff" strokeWidth={2.5} width={24} height={24}/>
+        </TouchableOpacity>
+
         </View>
         {/* Profile icon */}
         <View style={styles.hamb}>
@@ -56,23 +55,42 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent:'space-between',
     alignItems: 'center',
-    zIndex:98,
   },
   search:{
+    zIndex:2,
     borderWidth:2.5,
     borderRadius:30,
     borderColor:"#00BEB3",
+    backgroundColor:'#fff',
     width:'100%',
     paddingLeft: 10,
     paddingRight: 10,
+    marginLeft:15,
   },
   searchBar: {
-    flex:2,
+    flex:5,
     width:'100%',
+    height:'100%',
     display: 'flex',
     flexDirection:'row',
     alignItems:'center',
+    justifyContent:'center',
+    marginLeft:5,
   },
+  searchIcon:{
+    zIndex:1,
+    position:'absolute',
+    width:'50%',
+    padding:5,
+    left:-30,
+    marginLeft:5,
+    backgroundColor:"#00BEB3",
+    height:'100%',
+    display: 'flex',
+    flexDirection:'row',
+    alignItems:'center',
+    borderRadius:30,
+  },  
   hamb:{
     flex:1,
     flexDirection: 'row',

@@ -14,7 +14,7 @@ import MapPage from './views/MapPage';
 import Header from './components/Header';
 import SearchHeader from './components/SearchHeader';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, createDrawerNavigator } from '@react-navigation/stack';
 import { connect } from 'react-redux';
 
 const AuthStack = createStackNavigator();
