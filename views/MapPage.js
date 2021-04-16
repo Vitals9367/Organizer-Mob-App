@@ -5,6 +5,7 @@ import MapView from 'react-native-maps';
 
 export default function MapPage() {
 
+  /* currentLocation */
     const currentLocation = {
         latitude: 54.89655303673587,
         longitude: 23.903247439608805,
@@ -12,6 +13,8 @@ export default function MapPage() {
 
   return (
     <View style={styles.container}>
+
+      {/* Map */}
       <MapView style={styles.map}
         initialRegion={{
             latitude: currentLocation.latitude,
@@ -19,6 +22,7 @@ export default function MapPage() {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
             }} />
+
     </View>
   ); 
 }
