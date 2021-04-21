@@ -27,7 +27,9 @@
     "react-native-date-picker": "^3.2.10",
     "react-native-feather": "^1.0.2",
     "react-native-gesture-handler": "~1.8.0",
+    "react-native-google-places-autocomplete": "^2.2.0",
     "react-native-list-view-select": "^1.0.4",
+    "react-native-maps": "0.27.1",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.9",
     "react-native-screens": "~2.15.2",
@@ -38,8 +40,7 @@
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.8",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0",
-    "react-native-maps": "0.27.1"
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"
