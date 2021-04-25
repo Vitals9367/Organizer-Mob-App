@@ -11,6 +11,7 @@ import FriendsList from './views/FriendsList';
 import Messages from './views/Messages';
 import UserProfile from './views/UserProfile';
 import MapPage from './views/MapPage';
+import PlaceView from './views/PlaceView';
 import Header from './components/Header';
 import SearchHeader from './components/SearchHeader';
 import { NavigationContainer } from '@react-navigation/native';
@@ -56,6 +57,9 @@ const MainScreen = () => (
     <Main.Screen
       name="Events"
       component={EventPage} />
+    <Main.Screen
+      name="Place"
+      component={PlaceView} />
     <Main.Screen
       name="Profile"
       component={Profile} />

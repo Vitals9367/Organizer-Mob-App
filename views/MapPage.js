@@ -5,7 +5,7 @@ import MapView, { Callout, Marker } from 'react-native-maps';
 import {GetNearby} from "../services/MapService";
 import Loading from './Loading';
 import MapCallout from '../components/MapCallout';
-export default function MapPage() {
+export default function MapPage({navigation}) {
 
   /* currentLocation */
     const currentLocation = {
@@ -43,14 +43,14 @@ export default function MapPage() {
             key={index}
             coordinate={{ latitude:place.geometry.location.lat,longitude:place.geometry.location.lng}}
           >
-            <Callout>
+            <Callout
+              onPress={()=>{navigation.navigate('Place',{place: place})}}
+            >
               <MapCallout place={place} />
             </Callout>
           </Marker>)
         })}
       </MapView>
-      
-      <Text>{places[0].name}</Text>
     </View>
   ); 
 }
