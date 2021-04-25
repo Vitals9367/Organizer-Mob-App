@@ -7,7 +7,7 @@ function GetNearby(currentLocation){
     return axios
     .get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentLocation.latitude},${currentLocation.longitude}&radius=30000&type=food&key=${key}`)
     .then(res => {
-        return res.data;
+        return res.data.results;
     })
     .catch(err => {
         return err.data;
@@ -18,9 +18,9 @@ function GetNearby(currentLocation){
 function GetPlaceDetails(place_id){
 
     return axios
-    .get(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&key=${key}`)
+    .get(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=opening_hours,review,website,formatted_phone_number&key=${key}`)
     .then(res => {
-        return res.config.url;
+        return res.data.result;
     })
     .catch(err => {
         return err.data;
@@ -41,4 +41,4 @@ function GetPhoto(reference,maxwidth){
 
 }
 
-export {GetNearby, GetPhoto};
+export {GetNearby, GetPhoto,GetPlaceDetails};

@@ -30,8 +30,10 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent:'flex-start',
   },
   dollar:{
     color:'green',
+    marginLeft:0,
   }
 });

@@ -5,6 +5,7 @@ import MapView, { Callout, Marker } from 'react-native-maps';
 import {GetNearby} from "../services/MapService";
 import Loading from './Loading';
 import MapCallout from '../components/MapCallout';
+import {mapStyle} from '../utils/style';
 export default function MapPage({navigation}) {
 
   /* currentLocation */
@@ -17,7 +18,7 @@ export default function MapPage({navigation}) {
 
     useEffect(()=>{
       let isMounted = true;
-      GetNearby(currentLocation).then((data) =>{if (isMounted) setPlaces(data.results);});
+      GetNearby(currentLocation).then((data) =>{if (isMounted) setPlaces(data);});
       return () => { isMounted = false };
     },[]);
 
@@ -35,7 +36,8 @@ export default function MapPage({navigation}) {
             longitude: currentLocation.longitude,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
-            }}>
+            }}
+        customMapStyle={mapStyle}>
         {/* Markers */}
         {places.map((place,index)=>{
           return (
@@ -51,6 +53,7 @@ export default function MapPage({navigation}) {
           </Marker>)
         })}
       </MapView>
+      <View style={styles.bottomBar}><Text>asdasd</Text></View>
     </View>
   ); 
 }
@@ -66,4 +69,11 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
+  bottomBar:{
+    backgroundColor:'white',
+    position: 'absolute',
+    width: '100%',
+    height:'10%',
+    bottom: 0,
+  }
 });
