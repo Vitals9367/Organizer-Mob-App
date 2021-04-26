@@ -4,7 +4,7 @@ import axios from 'axios';
 GetSearch = (search_string) => {
 
     return axios
-    .get("http://192.168.8.195:5000/search/"+search_string,)
+    .get("https://orgapi11.herokuapp.com/search/"+search_string,)
     .then(res => {
         return res.data.data;
     })

@@ -5,7 +5,7 @@ import {getValueFromStore, saveToStore, deleteFromStore} from '../utils/SecureSt
 function GetEvents(){
 
     return axios
-    .get("http://192.168.8.195:5000/event/")
+    .get("https://orgapi11.herokuapp.com/event/")
     .then(res => {
         return res.data;
     })
@@ -19,7 +19,7 @@ function GetEvents(){
 function CreateEvent(data){
 
     return axios
-    .post("http://192.168.8.195:5000/event/",)
+    .post("https://orgapi11.herokuapp.com/event/",)
     .then(res => {
         return res.data;
     })

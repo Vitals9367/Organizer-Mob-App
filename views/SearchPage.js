@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   container: {
     height:'100%',
   },
-    searchBar: {
+  searchBar: {
     display: 'flex',
     flexDirection:'row',
     backgroundColor:'#00BEB3',

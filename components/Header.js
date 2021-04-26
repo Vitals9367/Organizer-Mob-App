@@ -26,7 +26,7 @@ function Header({ currentUser }) {
         {/* Search icon */}
         <TouchableOpacity
         style={styles.icon}
-        onPress={()=> navigation.navigate("Search")}
+        onPress={()=> navigation.navigate("Map")}
         >
           <Search stroke="#00BEB3" strokeWidth={2.5} width={24} height={24}/>
         </TouchableOpacity>
@@ -77,7 +77,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent:'space-between',
     alignItems: 'center',
-    zIndex:98,
   },
   icon:{
     marginLeft:25,

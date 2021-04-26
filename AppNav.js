@@ -10,9 +10,12 @@ import Notifications from './views/Notifications';
 import FriendsList from './views/FriendsList';
 import Messages from './views/Messages';
 import UserProfile from './views/UserProfile';
+import MapPage from './views/MapPage';
+import PlaceView from './views/PlaceView';
 import Header from './components/Header';
+import SearchHeader from './components/SearchHeader';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, createDrawerNavigator } from '@react-navigation/stack';
 import { connect } from 'react-redux';
 
 const AuthStack = createStackNavigator();
@@ -50,10 +53,13 @@ const MainScreen = () => (
   >
     <Main.Screen
       name="Home"
-      component={Homepage} />
+      component={Homepage}/>
     <Main.Screen
       name="Events"
       component={EventPage} />
+    <Main.Screen
+      name="Place"
+      component={PlaceView} />
     <Main.Screen
       name="Profile"
       component={Profile} />
@@ -72,6 +78,10 @@ const MainScreen = () => (
     <Main.Screen
       name="UserProfile"
       component={UserProfile} />
+    <Main.Screen
+      name="Map"
+      component={MapPage}
+      options={{ headerTitle: () => <SearchHeader/> }} />
   </Main.Navigator>
 );
 
