@@ -3,7 +3,8 @@ import { StyleSheet, TextInput, Text, View, TouchableOpacity, Dimensions  } from
 import { Search, Bell, User, Menu } from "react-native-feather";
 import { connect } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import GooglePlacesInput from './GooglePlacesInput';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+
 function SearchHeader({ currentUser }) {
 
   const [search, setSearch] = useState('');

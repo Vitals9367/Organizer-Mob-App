@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Image, TextInput, TouchableWithoutFeedback, Text, View, TouchableOpacity, addons, Linking } from 'react-native';
+import { StyleSheet, Image, TextInput, TouchableWithoutFeedback, Text, View,ScrollView , TouchableOpacity, addons, Linking } from 'react-native';
 import {GetPhoto,GetPlaceDetails} from "../services/MapService";
 import StarRate from "../components/StarRate";
 import PriceRate from "../components/PriceRate";
-import HoursPanel from "../components/HoursPanel";
 import Loading from './Loading';
-import { ArrowUp } from "react-native-feather";
+import { Map } from "react-native-feather";
 
 export default function PlaceView({route}) {
 
     let place = route.params.place;
     const [imageUrl,setImageUrl] = useState(null);
     const [detailInfo,setDetailInfo] = useState(null);
-    const [showHours,setShowHours] = useState(false);
 
     useEffect(()=>{
       let isMounted = true;
@@ -37,48 +35,48 @@ export default function PlaceView({route}) {
       Linking.openURL(`tel:${phone}`);
     }
 
-    const showHourPanel = () => {
-
-      if(detailInfo && detailInfo.opening_hours && detailInfo.opening_hours.weekday_text){
-        setShowHours(true);
-      }else{
-        return;
-      }
-
-    }
-
   return (
     <View>
 
-      {showHours && <HoursPanel hours={detailInfo.opening_hours.weekday_text}  disable={()=>setShowHours(false)} />}
+      <ScrollView style={styles.container}>
 
-      <View style={styles.container}>
-
-          {Header(place,showHourPanel)}
-
-          <View style={{...styles.flexRow,alignItems:'flex-start'}}>
-          {imageUrl ? <Image style={{...styles.image,width: 200, height: 200}} source={{uri: imageUrl}}/> : <View style={styles.imageLoad}><Loading/></View>}
+          <View>
+          {imageUrl ? <Image style={{...styles.image,width: '100%', height: 200}} source={{uri: imageUrl}}/> : <View style={styles.imageLoad}><Loading/></View>}
           </View>
-          
+        <View style={{padding: 20, paddingTop: 5}}>
+          {Header(place)}
+
           {Ratings(place)}
 
           {detailInfo
-          ? detailInfo.website &&
+          ? 
           <>
-          <TouchableOpacity
-          onPress={() => openWebsite(detailInfo.website)}
-          >
-             <Text style={{color:'#00BEB3',fontSize:16}}>Click to go to website</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-          onPress={() => openPhone(detailInfo.formatted_phone_numbe)}
-          >
-          <Text style={{fontSize:16}}>{detailInfo.formatted_phone_number}</Text>
-          </TouchableOpacity>
+          <View style={styles.flexRow}>
+
+            {detailInfo.website
+            && <TouchableOpacity
+            onPress={() => openWebsite(detailInfo.website)}
+            >
+              <Text style={{color:'#00BEB3',fontSize:16, marginBottom:5}}>Click to go to website</Text>
+            </TouchableOpacity>}
+
+            {detailInfo.formatted_phone_number
+            && <TouchableOpacity
+            onPress={() => openPhone(detailInfo.formatted_phone_number)}
+            >
+            <Text style={{fontSize:16, marginBottom:5}}>{detailInfo.formatted_phone_number}</Text>
+            </TouchableOpacity>}
+
+          </View>
+          {detailInfo.opening_hours && <Text>{detailInfo.opening_hours.weekday_text.join(',\n')}</Text>}
           </>
           : <Text>Loading Info...</Text>}
-      </View>
-        {Comments(detailInfo)}
+
+          
+        </View>
+      </ScrollView>
+      
+        {Directions()}
     </View>
   );
 }
@@ -88,7 +86,7 @@ const Ratings = (place) => {
 
     place.rating && <View style={styles.ratingBox}>
 
-    <StarRate style={styles.rating} rating={place.rating} size={26} margin={10} />
+    <StarRate style={styles.rating} rating={place.rating} size={26} margin={5} />
     <Text>Total Ratings: {place.user_ratings_total}</Text>
 
   </View>
@@ -104,27 +102,21 @@ const Header = (place,showHourPanel) => {
 
     {place.vicinity && <Text>{place.vicinity}</Text>}
 
-    <View>
-      <TouchableOpacity
-      onPress={() =>{ showHourPanel() }}
-      >
+    <View style={styles.flexRow}> 
         {place.opening_hours && place.opening_hours.open_now
-        ? <Text style={{...styles.open,color:'green'}}>OPEN click for hours</Text>
-        : <Text style={{...styles.open,color:'red'}}>CLOSED click for hours</Text>}
-      </TouchableOpacity>
+        ? <Text style={{...styles.open,color:'green'}}>OPEN</Text>
+        : <Text style={{...styles.open,color:'red'}}>CLOSED</Text>}
       {place.price_level && <PriceRate  rating={place.price_level} size={22} />}
     </View>
     </>
   )
 }
 
-const Comments = (detailInfo) => {
+const Directions = () => {
   return(
-  <View style={styles.commentSection}>
-    <ArrowUp stroke="#fff" strokeWidth={2.5} width={24} height={24} />
-    {detailInfo
-      ? detailInfo.reviews && <Text style={styles.reviewsText}>Reviews: {detailInfo.reviews.length}</Text>
-      : <Text style={styles.reviewsText}>Loading Reviews</Text>}
+  <View style={styles.DirectionsSection}>
+    <Map stroke="#fff" strokeWidth={2} width={24} height={24} />
+    <Text style={styles.DirectionsText}>Directions</Text>
   </View>)
 }
 
@@ -133,9 +125,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection:'column',
     backgroundColor: '#fff',
-    padding: 20,
-    paddingTop: 5,
-    height:'85%',
+    height:'92%',
   },
   flexRow:{
     display: 'flex',
@@ -153,23 +143,24 @@ const styles = StyleSheet.create({
   },
   image:{
     marginTop:5,
-    borderRadius:5,
   },
   imageLoad:{
     backgroundColor:'grey',
     display:'flex',
     justifyContent:'center',
-    width:200,
-    height:200,
+    width: '100%',
+    height: 200,
   },
-  commentSection:{
+  DirectionsSection:{
     padding: 20,
     paddingTop: 10,
     backgroundColor:'#00BEB3',
-    height:'15%',
+    height:'8%',
     width:'100%',
     display: 'flex',
+    flexDirection:'row',
     alignItems:'center',
+    justifyContent:'center',
   },
   ratingBox:{
     display: 'flex',
@@ -177,9 +168,10 @@ const styles = StyleSheet.create({
     alignItems:'center',
     justifyContent:'space-between'
   },
-  reviewsText:{
+  DirectionsText:{
     fontSize:20,
     fontWeight:'bold',
     color:'white',
+    marginLeft:10,
   },
 });
