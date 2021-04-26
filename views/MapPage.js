@@ -10,35 +10,52 @@ import * as Location from 'expo-location';
 
 export default function MapPage({navigation}) {
 
-    const [location, setLocation] = useState(null);
-    const [errorMsg, setErrorMsg] = useState(null);
-
-  /* currentLocation */
-    const currentLocation = {
+  /* defaultLocation */
+    const defaultLocation = {
+      coords:{
         latitude: 54.89655303673587,
         longitude: 23.903247439608805,
+      },
     }
 
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
     const [places,setPlaces] = useState(null);
     const [selectedPlace,setSelectedPlace] = useState(null);
     const [bottomBar,setBottomBar] = useState(false);
 
-    useEffect(()=>{
-      
-      (async () => {
+    const getCurrentLocation = async () => {
+
       let { status } = await Location.requestForegroundPermissionsAsync();
+
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
-        return;
+        throw new Error();
+
       }
 
       let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    })();
+      return location;
+    }
+
+    const getNearbyPlaces = (loc) => {
 
       let isMounted = true;
-      GetNearby(currentLocation).then((data) =>{if (isMounted) setPlaces(data);});
+      GetNearby(loc).then((data) =>{if (isMounted) setPlaces(data);});
       return () => { isMounted = false };
+
+    }
+
+    useEffect(()=>{
+          
+      getCurrentLocation()
+      .then((location)=>{
+        setLocation(location);
+        getNearbyPlaces(location);})
+      .catch(()=>{
+        setLocation(defaultLocation);
+        getNearbyPlaces(defaultLocation);
+      });
 
     },[]);
 
@@ -48,19 +65,26 @@ export default function MapPage({navigation}) {
   return (
     <View style={styles.container}>
 
-      {/* Map */}
       <MapView style={styles.map}
         initialRegion={{
-            latitude: currentLocation.latitude,
-            longitude: currentLocation.longitude,
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
             }}
         customMapStyle={mapStyle}
         onPress={()=>{setBottomBar(false)}}
         >
-        {/* Markers */}
-        {places.map((place,index)=>{
+
+          <Marker
+            coordinate={{ latitude:location.coords.latitude,longitude:location.coords.longitude}}
+          >
+            <Callout>
+              <Text>Current Location</Text>
+            </Callout>
+          </Marker>
+
+        {places && places.map((place,index)=>{
           return (
           <Marker
             key={index}
@@ -73,7 +97,7 @@ export default function MapPage({navigation}) {
             <Callout
               onPress={()=>{navigation.navigate('Place',{place: place})}}
             >
-              <MapCallout place={place} />
+              <MapCallout place={place}/>
             </Callout>
           </Marker>)
         })}
@@ -81,7 +105,7 @@ export default function MapPage({navigation}) {
       {bottomBar && <View style={styles.bottomBar}>
         <View style={{flex:2}}>
           <Text style={styles.bottomBarText}>{selectedPlace.name}</Text>
-          <Text >Distance: 15 km</Text>
+          <Text>Distance: 15 km</Text>
         </View>
         <TouchableOpacity
         style={styles.btn}
