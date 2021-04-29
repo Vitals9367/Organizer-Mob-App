@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Image, Text, View, TouchableOpacity, Dimensions } from 'react-native';
-import { Loader } from "react-native-feather";
 import MapView, { Callout, Marker } from 'react-native-maps';
-import {GetNearby} from "../services/MapService";
+import { connect } from 'react-redux';
+import * as Location from 'expo-location';
+
 import Loading from './Loading';
 import MapCallout from '../components/MapCallout';
 import {mapStyle} from '../utils/style';
-import * as Location from 'expo-location';
+import { GetPlacesAction } from '../redux/actions/MapActions';
 
-export default function MapPage({navigation}) {
+
+function MapPage({navigation, GetPlaces, places, loading}) {
 
   /* defaultLocation */
     const defaultLocation = {
@@ -20,7 +22,6 @@ export default function MapPage({navigation}) {
 
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-    const [places,setPlaces] = useState(null);
     const [selectedPlace,setSelectedPlace] = useState(null);
     const [bottomBar,setBottomBar] = useState(false);
 
@@ -38,23 +39,15 @@ export default function MapPage({navigation}) {
       return location;
     }
 
-    const getNearbyPlaces = (loc) => {
-
-      let isMounted = true;
-      GetNearby(loc).then((data) =>{if (isMounted) setPlaces(data);});
-      return () => { isMounted = false };
-
-    }
-
     useEffect(()=>{
           
       getCurrentLocation()
       .then((location)=>{
         setLocation(location);
-        getNearbyPlaces(location);})
+        GetPlaces(location)})
       .catch(()=>{
         setLocation(defaultLocation);
-        getNearbyPlaces(defaultLocation);
+        GetPlaces(location);
       });
 
     },[]);
@@ -172,3 +165,20 @@ const styles = StyleSheet.create({
     fontWeight:'bold',
   },
 });
+
+const mapStateToProps = state => {
+
+    return{
+        places : state.Map.placeList,
+        loading : state.Map.loading,
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+
+    return{
+        GetPlaces: (location) => dispatch(GetPlacesAction(location)),
+    }
+}
+
+export default  connect (mapStateToProps,mapDispatchToProps) (MapPage)

@@ -116,7 +116,7 @@ const Directions = () => {
   return(
   <View style={styles.DirectionsSection}>
     <Map stroke="#fff" strokeWidth={2} width={24} height={24} />
-    <Text style={styles.DirectionsText}>Directions</Text>
+    <Text style={styles.DirectionsText}>View On Map</Text>
   </View>)
 }
 

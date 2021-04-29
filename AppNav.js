@@ -1,17 +1,21 @@
 import React from 'react';
-import Login from './views/Login';
-import Register from './views/Register';
-import Homepage from './views/Homepage';
-import EventPage from './views/EventPage';
-import Loading from './views/Loading';
-import Profile from './views/Profile';
-import SearchPage from './views/SearchPage';
-import Notifications from './views/Notifications';
-import FriendsList from './views/FriendsList';
-import Messages from './views/Messages';
-import UserProfile from './views/UserProfile';
-import MapPage from './views/MapPage';
-import PlaceView from './views/PlaceView';
+
+import {Login,
+Register,
+Homepage,
+EventPage,
+Loading,
+Profile,
+SearchPage,
+Notifications,
+FriendsList,
+Messages,
+UserProfile,
+MapPage,
+PlaceView,
+PlaceList
+} from './views/index';
+
 import Header from './components/Header';
 import SearchHeader from './components/SearchHeader';
 import { NavigationContainer } from '@react-navigation/native';
@@ -79,6 +83,9 @@ const MainScreen = () => (
       name="UserProfile"
       component={UserProfile} />
     <Main.Screen
+      name="PlaceList"
+      component={PlaceList} />
+    <Main.Screen
       name="Map"
       component={MapPage}
       options={{ headerTitle: () => <SearchHeader/> }} />
@@ -102,9 +109,9 @@ const RootStackScreen = ({ isLoggedIn }) => (
   </RootStack.Navigator>
 );
 
-function AppNav({ isLoading, isLoggedIn }) {
+function AppNav({ isLoadingAuth,isLoadingMap, isLoggedIn }) {
 
-  if (isLoading) {
+  if (isLoadingAuth) {
     return <Loading />;
   }
 
@@ -118,7 +125,8 @@ function AppNav({ isLoading, isLoggedIn }) {
 const mapStateToProps = state => {
 
     return{
-        isLoading : state.Auth.loading,
+        isLoadingAuth : state.Auth.loading,
+        isLoadingMap : state.Map.loading,
         isLoggedIn : state.Auth.loggedIn
     }
 }

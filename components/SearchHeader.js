@@ -36,7 +36,7 @@ function SearchHeader({ currentUser }) {
         {/* Profile icon */}
         <View style={styles.hamb}>
           <TouchableOpacity
-          onPress={()=> navigation.navigate("Profile")}
+          onPress={()=> navigation.navigate("PlaceList")}
           >
           <Menu stroke="#00BEB3" strokeWidth={2.5} width={24} height={24}/>
           </TouchableOpacity>
