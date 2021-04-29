@@ -13,7 +13,9 @@ export default function PlaceView({route}) {
     const [detailInfo,setDetailInfo] = useState(null);
 
     useEffect(()=>{
+
       let isMounted = true;
+      
       if(place.photos){
       GetPhoto(place.photos[0].photo_reference,400).then(res =>{
         if(isMounted)
@@ -22,10 +24,12 @@ export default function PlaceView({route}) {
       }else{
         setImageUrl('none');
       };
+
       GetPlaceDetails(place.place_id).then(res =>{
         setDetailInfo(res);
       })
       return () => { isMounted = false };
+
     },[])
     
     const openWebsite = (url) => {
