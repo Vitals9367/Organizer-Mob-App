@@ -6,7 +6,7 @@ import PriceRate from "../components/PriceRate";
 import Loading from './Loading';
 import { Map } from "react-native-feather";
 
-export default function PlaceView({route}) {
+export default function PlaceView({route, navigation, AnimateToLocation}) {
 
     let place = route.params.place;
     const [imageUrl,setImageUrl] = useState(null);
@@ -39,6 +39,11 @@ export default function PlaceView({route}) {
       Linking.openURL(`tel:${phone}`);
     }
 
+    const OnDirections = () => {
+      navigation.pop();
+      AnimateToLocation();
+    }
+
   return (
     <View>
 
@@ -48,9 +53,9 @@ export default function PlaceView({route}) {
           {imageUrl ? <Image style={{...styles.image,width: '100%', height: 200}} source={{uri: imageUrl}}/> : <View style={styles.imageLoad}><Loading/></View>}
           </View>
         <View style={{padding: 20, paddingTop: 5}}>
-          {Header(place)}
+          <Header place={place}/>
 
-          {Ratings(place)}
+          <Ratings place={place} />
 
           {detailInfo
           ? 
@@ -80,25 +85,27 @@ export default function PlaceView({route}) {
         </View>
       </ScrollView>
       
-        {Directions()}
+        <Directions OnDirections={OnDirections} />
     </View>
   );
 }
-const Ratings = (place) => {
+const Ratings = ({place}) => {
 
-  return(
+  if(place.rating){
+    return(
+      <View style={styles.ratingBox}>
 
-    place.rating && <View style={styles.ratingBox}>
+        <StarRate style={styles.rating} rating={place.rating} size={26} margin={5} />
+        <Text>Total Ratings: {place.user_ratings_total}</Text>
 
-    <StarRate style={styles.rating} rating={place.rating} size={26} margin={5} />
-    <Text>Total Ratings: {place.user_ratings_total}</Text>
-
-  </View>
-  )
-
+      </View>
+    )
+  }else{
+    return(<Text>No ratings</Text>)
+  }
 }
 
-const Header = (place,showHourPanel) => {
+const Header = ({place,showHourPanel}) => {
 
   return(
     <>
@@ -116,12 +123,14 @@ const Header = (place,showHourPanel) => {
   )
 }
 
-const Directions = () => {
+const Directions = ({OnDirections}) => {
   return(
-  <View style={styles.DirectionsSection}>
+  <TouchableOpacity style={styles.DirectionsSection}
+  onPress={OnDirections}
+  >
     <Map stroke="#fff" strokeWidth={2} width={24} height={24} />
     <Text style={styles.DirectionsText}>View On Map</Text>
-  </View>)
+  </TouchableOpacity>)
 }
 
 const styles = StyleSheet.create({
@@ -157,7 +166,6 @@ const styles = StyleSheet.create({
   },
   DirectionsSection:{
     padding: 20,
-    paddingTop: 10,
     backgroundColor:'#00BEB3',
     height:'8%',
     width:'100%',

@@ -41,4 +41,4 @@ function GetPhoto(reference,maxwidth){
 
 }
 
-export {GetNearby, GetPhoto,GetPlaceDetails};
+export {GetNearby, GetPhoto,GetPlaceDetails, key};

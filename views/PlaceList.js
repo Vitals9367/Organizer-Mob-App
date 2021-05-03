@@ -10,17 +10,14 @@ import {GetPhoto} from "../services/MapService";
 function PlaceList({ navigation, places }) {
 
   const [search,setSearch] = useState('');
-  const [list,setList] = useState([]);
+  const [list,setList] = useState(places);
 
   const onSearch = () => {
 
     if(search != ''){
-
-      GetSearch(search).then((resp) =>{
-        if(resp != null){
-          setList(resp)
-        }
-      } )
+      setList(places.filter(place => place.name.toLowerCase().includes(search.toLowerCase())))
+    }else if(search == " " || search == ""){
+      setList(places);
     }
   }
 
@@ -82,10 +79,13 @@ function PlaceList({ navigation, places }) {
 
         <TextInput
         style={styles.text_in}
-        onChangeText={text => setSearch(text)}
+        onChangeText={text =>
+        {
+          setSearch(text);
+          onSearch();
+        }}
         value={search}
         placeholder="Search..."
-        onSubmitEditing={onSearch}
         />
       </View>
 
@@ -93,9 +93,9 @@ function PlaceList({ navigation, places }) {
         
       <FlatList
       style={styles.listView}
-      data={places}
+      data={list}
       renderItem={Item}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.name}
       />
 
     </View>

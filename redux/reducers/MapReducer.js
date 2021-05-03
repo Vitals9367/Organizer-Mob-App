@@ -7,6 +7,7 @@ import {
 const initialState = {
     placeList: null,
     loading:false,
+    savedPlace: null,
 }
 
 const MapReducer = (state = initialState, action) =>{
