@@ -40,8 +40,8 @@ export default function PlaceView({route, navigation, AnimateToLocation}) {
     }
 
     const OnDirections = () => {
-      navigation.pop();
-      AnimateToLocation();
+      //navigation.pop();
+      //AnimateToLocation();
     }
 
   return (

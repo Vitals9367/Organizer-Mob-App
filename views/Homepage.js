@@ -1,9 +1,16 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { StyleSheet, TextInput, Text, View, TouchableOpacity, addons } from 'react-native';
+import CustomModal from '../components/modals/CustomModal';
+import {LoginSuccesfull} from '../components/modals/Data';
 
 export default function Homepage({ navigation }) {
+
+  const [showModal,setShowModal] = useState(true);
+
   return (
     <View style={styles.container}>
+
+      <CustomModal data={LoginSuccesfull} show={showModal} disable={()=>setShowModal(false)}/>
 
       {/* homepage quote */}
       <View style={styles.textBox}>

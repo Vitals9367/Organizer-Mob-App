@@ -1,14 +1,48 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, Text, View, TouchableOpacity, addons } from 'react-native';
 import { connect } from 'react-redux';
-import { LoginAction } from '../redux/actions/AuthActions';
+import { LoginAction, LoginFailModalFalse, RegisterSuccessModalFalse, RegisterFailModalFalse } from '../redux/actions/AuthActions';
 import LoginHeader from '../src/icons/LoginHeader';
+import {checkLenghtMin,checkLenghtMax,checkEmail} from '../utils/Validators';
+import CustomModal from '../components/modals/CustomModal';
+import {RegisterSuccesfull, RegisterFailed, LoginFailed} from '../components/modals/Data';
 
-function Login({ navigation, loginUser }) {
+function Login({ navigation, loginUser, showRegSuccess, showRegFail, showLoginFail, LoginFailFalse, RegisterSuccessFalse, RegisterFailFalse}) {
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [emailError, setEmailError] = useState(null);
+    const [passwordError, setPasswordError] = useState(null);
+
+    const [showRegF,setShowRegFail] = useState(showRegFail);
+    const [showRegS,setShowRegSucc] = useState(showRegSuccess);
+    const [showLoginF,setShowLoginFail] = useState(showLoginFail);
     
     const onLogin = () => {
+      
+      setEmailError(null);
+      setPasswordError(null);
+
+      if(!checkLenghtMin(email,4)){
+        setEmailError("Email is too short!");
+        return;
+      }
+      if(!checkLenghtMax(email,40)){
+        setEmailError("Email is too long!");
+        return;
+      }
+      if(!checkEmail(email)){
+        setEmailError("Invalid email!");
+        return;
+      }
+      if(email.trim() == ''){
+        setEmailError("Please enter email!");
+        return;
+      }
+      if(password.trim() == ''){
+        setPasswordError("Please enter password!");
+        return;
+      }
       
       var data = {
         "email" : email,
@@ -21,6 +55,19 @@ function Login({ navigation, loginUser }) {
   return (
     <View style={styles.container}>
 
+      <CustomModal data={RegisterSuccesfull} show={showRegS} disable={()=>{
+        setShowRegSucc(false);
+        RegisterSuccessFalse();
+        }}/>
+      <CustomModal data={RegisterFailed} show={showRegF} disable={()=>{
+        setShowRegFail(false);
+        RegisterFailFalse();
+        }}/>
+      <CustomModal data={LoginFailed} show={showLoginF} disable={()=>{
+        setShowLoginFail(false);
+        LoginFailFalse();
+        }}/>
+
         {/* Page decorations */}
         <LoginHeader style={styles.headerIcon} >
         </LoginHeader>
@@ -28,6 +75,7 @@ function Login({ navigation, loginUser }) {
         <Text style={{...styles.header,marginTop:200}} >Welcome to the site</Text>
 
         {/* Email input */}
+        {emailError && <Text style={styles.error}>{emailError}</Text>}
         <TextInput
         style={styles.text_in}
         onChangeText={text => setEmail(text)}
@@ -37,6 +85,7 @@ function Login({ navigation, loginUser }) {
         />
 
         {/* Password input */}
+        {passwordError && <Text style={styles.error}>{passwordError}</Text>}
         <TextInput
         style={styles.text_in}
         onChangeText={text => setPassword(text)}
@@ -161,13 +210,27 @@ const styles = StyleSheet.create({
 
     elevation: 4,
   },
-});
+  error:{
+    color:'#f50000',
+  }
 
+});
+const mapStateToProps = state => {
+
+    return{
+        showRegSuccess : state.Auth.showRegSuccess,
+        showRegFail : state.Auth.showRegFail,
+        showLoginFail : state.Auth.showLoginFail,
+    }
+}
 const mapDispatchToProps = dispatch => {
 
     return{
         loginUser: (user) => dispatch(LoginAction(user)),
+        LoginFailFalse: () => dispatch(LoginFailModalFalse()),
+        RegisterSuccessFalse: () => dispatch(RegisterSuccessModalFalse()),
+        RegisterFailFalse: () => dispatch(RegisterFailModalFalse()),
     }
 }
 
-export default  connect (null,mapDispatchToProps) (Login)
+export default  connect (mapStateToProps,mapDispatchToProps) (Login)

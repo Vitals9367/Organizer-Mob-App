@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import { StyleSheet, FlatList, Image, TextInput, Text, View, TouchableOpacity, addons } from 'react-native';
 import { Search } from "react-native-feather";
 import GetSearch from "../services/SearchService";
@@ -6,6 +6,54 @@ import { connect } from 'react-redux';
 import PriceRate from '../components/PriceRate';
 import StarRate from "../components/StarRate";
 import {GetPhoto} from "../services/MapService";
+
+  function Item({ item }){
+
+    const[url,setUrl] = useState(null);
+
+    const getImageUrl = (place) => {
+
+      if(place.photos){
+      GetPhoto(place.photos[0].photo_reference,400).then(res =>{
+        return res;
+      });
+      }else{
+        return;
+      };
+
+    }
+
+    useEffect(() => {
+
+      setUrl(getImageUrl(item));
+
+    });
+
+   return( 
+    <TouchableOpacity
+      onPress={()=>{navigation.navigate('Place',{place:item})}}
+    >
+        <View style={styles.row}>
+
+          {/* image */}
+          <Image
+          style={styles.image} 
+          source={url}
+          />
+
+          <View style={styles.rowInfo}>
+            <Text style={styles.name}>{item.name}</Text>
+            <Text >{item.vicinity}</Text>
+            {item.opening_hours && item.opening_hours.open_now
+              ? <Text style={{...styles.open,color:'green'}}>OPEN</Text>
+              : <Text style={{...styles.open,color:'red'}}>CLOSED</Text>}
+            {item.price_level && <PriceRate  rating={item.price_level} size={22} />}
+            <StarRate style={styles.rating} rating={item.rating} size={26} margin={5} />
+          </View>
+        </View>
+    </TouchableOpacity> 
+  )
+};
 
 function PlaceList({ navigation, places }) {
 
@@ -20,45 +68,6 @@ function PlaceList({ navigation, places }) {
       setList(places);
     }
   }
-
-  const getImageUrl = (place) => {
-
-      if(place.photos){
-      GetPhoto(place.photos[0].photo_reference,400).then(res =>{
-        return res;
-      });
-      }else{
-        return;
-      };
-
-  }
-
-  const Item = ({ item, index, separators }) => (
-
-    <TouchableOpacity
-      key={index}
-      onPress={()=>{navigation.navigate('Place',{place:item})}}
-    >
-        <View style={styles.row}>
-
-          {/* image */}
-          <Image
-          style={styles.image} 
-          source={getImageUrl(item)}
-          />
-
-          <View style={styles.rowInfo}>
-            <Text style={styles.name}>{item.name}</Text>
-            <Text >{item.vicinity}</Text>
-            {item.opening_hours && item.opening_hours.open_now
-              ? <Text style={{...styles.open,color:'green'}}>OPEN</Text>
-              : <Text style={{...styles.open,color:'red'}}>CLOSED</Text>}
-            {item.price_level && <PriceRate  rating={item.price_level} size={22} />}
-            <StarRate style={styles.rating} rating={item.rating} size={26} margin={5} />
-          </View>
-        </View>
-    </TouchableOpacity> 
-);
 
   return (
     <View style={styles.container}>
@@ -94,7 +103,11 @@ function PlaceList({ navigation, places }) {
       <FlatList
       style={styles.listView}
       data={list}
-      renderItem={Item}
+      renderItem={({item,index})=>{
+
+        <Item item={item} key={index} />
+
+      }}
       keyExtractor={(item) => item.name}
       />
 

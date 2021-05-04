@@ -2,10 +2,10 @@ import axios from 'axios';
 
 const key = "AIzaSyABxodUEwkxWuhorogJitnKpIIiTdKga9U";
 
-function GetNearby(currentLocation){
+function GetNearby(location){
 
     return axios
-    .get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${currentLocation.coords.latitude},${currentLocation.coords.longitude}&radius=30000&type=food&key=${key}`)
+    .get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.coords.latitude},${location.coords.longitude}&radius=30000&type=food&key=${key}`)
     .then(res => {
         return res.data.results;
     })

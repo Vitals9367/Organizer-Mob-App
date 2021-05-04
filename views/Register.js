@@ -3,6 +3,7 @@ import { StyleSheet, TextInput, Text, View, TouchableOpacity } from 'react-nativ
 import { connect } from 'react-redux';
 import { RegisterAction } from '../redux/actions/AuthActions';
 import RegisterHeader from '../src/icons/RegisterHeader';
+import {checkLenghtMin,checkLenghtMax,checkEmail} from '../utils/Validators';
 
 function Register({ navigation, registerUser }) {
 
@@ -10,19 +11,71 @@ function Register({ navigation, registerUser }) {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [email, setEmail] = useState('');
+    const [usernameError, setUsernameError] = useState(null);
+    const [emailError, setEmailError] = useState(null);
+    const [passwordError, setPasswordError] = useState(null);
+    const [confirmPasswordError, setConfirmPasswordError] = useState(null);
 
     const onRegister = () => {
       
+      setUsernameError(null);
+      setEmailError(null);
+      setPasswordError(null);
+      setConfirmPasswordError(null);
+
+      if(username.trim() == ''){
+        setUsernameError("Please enter username!");
+        return;
+      }
+      if(!checkLenghtMin(username,4)){
+        setUsernameError("Username is too short!");
+        return;
+      }
+      if(!checkLenghtMax(username,40)){
+        setUsernameError("Username is too long!");
+        return;
+      }
+      if(email.trim() == ''){
+        setEmailError("Please enter email!");
+        return;
+      }
+      if(!checkLenghtMin(email,4)){
+        setEmailError("Email is too short!");
+        return;
+      }
+      if(!checkLenghtMax(email,40)){
+        setEmailError("Email is too long!");
+        return;
+      }
+      if(!checkEmail(email)){
+        setEmailError("Invalid email!");
+        return;
+      }
+      if(password.trim() == ''){
+        setPasswordError("Please enter password!");
+        return;
+      }
+      if(!checkLenghtMin(password,4)){
+        setPasswordError("Password is too short!");
+        return;
+      }
+      if(!checkLenghtMax(password,40)){
+        setPasswordError("Password is too long!");
+        return;
+      }
+      if(confirmPassword != password){
+        setConfirmPasswordError("Passwords do not match!");
+        return;
+      }
+
       var data = {
         "username" : username,
         "password" : password,
         "email" : email,
       }
 
-      if(password == confirmPassword){
-        console.log(data);
         registerUser(data);
-      }
+      
     }
 
   return (
@@ -35,6 +88,7 @@ function Register({ navigation, registerUser }) {
         <Text style={{...styles.header,marginTop:120}} >Welcome to the site</Text>
 
         {/* Username input */}
+        {usernameError && <Text style={styles.error}>{usernameError}</Text>}
         <TextInput
         style={styles.text_in}
         onChangeText={text => setUsername(text)}
@@ -44,6 +98,7 @@ function Register({ navigation, registerUser }) {
         />
         
         {/* Email input */}
+        {emailError && <Text style={styles.error}>{emailError}</Text>}
         <TextInput
         style={styles.text_in}
         onChangeText={text => setEmail(text)}
@@ -53,6 +108,7 @@ function Register({ navigation, registerUser }) {
         />
 
         {/* Password input */}
+        {passwordError && <Text style={styles.error}>{passwordError}</Text>}
         <TextInput
         style={styles.text_in}
         onChangeText={text => setPassword(text)}
@@ -63,6 +119,7 @@ function Register({ navigation, registerUser }) {
         />
 
         {/* Confirm password input */}
+        {confirmPasswordError && <Text style={styles.error}>{confirmPasswordError}</Text>}
         <TextInput
         style={styles.text_in}
         onChangeText={text => setConfirmPassword(text)}
@@ -187,6 +244,10 @@ const styles = StyleSheet.create({
 
     elevation: 4,
   },
+  error:{
+    color:'#f50000',
+  }
+
 });
 
 const mapDispatchToProps = dispatch => {

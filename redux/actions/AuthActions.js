@@ -8,7 +8,10 @@ import {
     LOGOUT_FAILURE,
     REGISTER_REQUEST,
     REGISTER_SUCCESS,
-    REGISTER_FAILURE
+    REGISTER_FAILURE,
+    REGISTER_SUCCESS_MODAL_FALSE,
+    REGISTER_FAIL_MODAL_FALSE,
+    LOGIN_SUCCESS_MODAL_FALSE,
 } from '../actions/types';
 import {getValueFromStore, saveToStore, deleteFromStore} from '../../utils/SecureStore';
 
@@ -111,5 +114,20 @@ export const RegisterFailure = error => {
   return {
     type: REGISTER_FAILURE,
     payload: error
+  }
+}
+export const LoginFailModalFalse = () => {
+  return {
+    type: LOGIN_SUCCESS_MODAL_FALSE,
+  }
+}
+export const RegisterSuccessModalFalse = () => {
+  return {
+    type: REGISTER_SUCCESS_MODAL_FALSE,
+  }
+}
+export const RegisterFailModalFalse = () => {
+  return {
+    type: REGISTER_FAIL_MODAL_FALSE,
   }
 }

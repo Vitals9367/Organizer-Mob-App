@@ -11,7 +11,7 @@ import {mapStyle} from '../utils/style';
 import { GetPlacesAction } from '../redux/actions/MapActions';
 
 
-function MapPage({navigation, GetPlaces, places, loading}) {
+function MapPage({navigation, getPlaces, places }) {
 
   const EDGE_PADDING = {
   top: 100,
@@ -59,12 +59,11 @@ function MapPage({navigation, GetPlaces, places, loading}) {
 
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
-        throw new Error();
-
+        return defaultLocation;
       }
-
       let location = await Location.getCurrentPositionAsync({});
       return location;
+
     }
     
     const AnimateToLocation = (place) => {
@@ -85,20 +84,19 @@ function MapPage({navigation, GetPlaces, places, loading}) {
     }
 
     useEffect(()=>{
-      
-      setLocation(defaultLocation);
 
-      getCurrentLocation()
-      .then((location)=>{
-        setLocation(location);
-        GetPlaces(location)})
-      .catch(()=>{
-        GetPlaces(location);
-      });
+      const setInfo = async () =>{
+
+        let l = await getCurrentLocation();
+        setLocation(l);
+        getPlaces(l);
+      };
+
+      setInfo();
 
     },[]);
-
-    if(places == null)
+    
+    if(places == null || location == null)
       return (<Loading/>)
 
   return (
@@ -263,14 +261,13 @@ const mapStateToProps = state => {
 
     return{
         places : state.Map.placeList,
-        loading : state.Map.loading,
     }
 }
 
 const mapDispatchToProps = dispatch => {
 
     return{
-        GetPlaces: (location) => dispatch(GetPlacesAction(location)),
+        getPlaces: (location) => dispatch(GetPlacesAction(location)),
     }
 }
 

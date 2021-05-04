@@ -7,15 +7,21 @@ import {
     LOGOUT_FAILURE,
     REGISTER_REQUEST,
     REGISTER_SUCCESS,
-    REGISTER_FAILURE
+    REGISTER_FAILURE,
+    REGISTER_SUCCESS_MODAL_FALSE,
+    REGISTER_FAIL_MODAL_FALSE,
+    LOGIN_SUCCESS_MODAL_FALSE,
 } from '../actions/types';
 
 const initialState = {
     loading: false,
-    loggedIn: true,
+    loggedIn: false,
     currentUser:'',
     response: '',
-    error: ''
+    error: '',
+    showRegSuccess:false,
+    showRegFail:false,
+    showLoginFail:false,
 }
 
 const AuthReducer = (state = initialState, action) =>{
@@ -24,7 +30,9 @@ const AuthReducer = (state = initialState, action) =>{
         case LOGIN_REQUEST:
             return{
                 ...state,
-                loading: true
+                loading: true,
+                showLoginFail:false,
+                
             }
 
         case LOGIN_SUCCESS:
@@ -42,7 +50,8 @@ const AuthReducer = (state = initialState, action) =>{
                 ...state,
                 loading: false,
                 response: '',
-                error: action.payload
+                error: action.payload,
+                showLoginFail: true,
             }
         case LOGOUT_REQUEST:
             return{
@@ -71,7 +80,9 @@ const AuthReducer = (state = initialState, action) =>{
         case REGISTER_REQUEST:
             return{
                 ...state,
-                loading: true
+                loading: true,
+                showRegSuccess:false,
+                showRegFail:false,
             }
 
         case REGISTER_SUCCESS:
@@ -79,7 +90,8 @@ const AuthReducer = (state = initialState, action) =>{
                 ...state,
                 loading: false,
                 response: action.payload,
-                error: ''
+                error: '',
+                showRegSuccess:true,
             }
 
         case REGISTER_FAILURE:
@@ -87,7 +99,25 @@ const AuthReducer = (state = initialState, action) =>{
                 ...state,
                 loading: false,
                 response: '',
-                error: action.payload
+                error: action.payload,
+                showRegFail: true,
+            }
+
+        case REGISTER_SUCCESS_MODAL_FALSE:
+            return{
+                ...state,
+                showRegSuccess: false,
+            }
+        case REGISTER_FAIL_MODAL_FALSE:
+            return{
+                ...state,
+                showRegFail: false,
+            }
+
+        case LOGIN_SUCCESS_MODAL_FALSE:
+            return{
+                ...state,
+                showLoginFail: false,
             }
 
         default:
