@@ -5,10 +5,6 @@ export default function UserProfile({ route }) {
 
   const user = route.params.user;
 
-  const addFriend = ()  => {
-    
-  }
-
   return (
     <View style={styles.container}>
 
@@ -17,10 +13,7 @@ export default function UserProfile({ route }) {
 
           {/* Profile icon */}
             <View style={styles.icon}>
-                <Image
-                style={{width:iconSize,height:iconSize,borderRadius:iconSize}} 
-                source={ require('../assets/person.png')}
-                />
+
             </View>
 
             {/* Profile info */}

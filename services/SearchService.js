@@ -1,16 +1,16 @@
 import axios from 'axios';
+import requests from '../utils/requests';
 
 /* makes search by string */
-GetSearch = (search_string) => {
+GetSearch = async (search_string) => {
 
-    return axios
-    .get("https://orgapi11.herokuapp.com/search/"+search_string,)
-    .then(res => {
+    try {
+        const res = await axios
+            .get(requests.getSearch + search_string);
         return res.data.data;
-    })
-    .catch(err => {
+    } catch (err) {
         return null;
-    });
+    }
 }
 
 export default GetSearch

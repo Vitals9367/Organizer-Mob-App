@@ -1,33 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Image, TextInput, TouchableWithoutFeedback, Text, View,ScrollView , TouchableOpacity, addons, Linking } from 'react-native';
-import {GetPhoto,GetPlaceDetails} from "../services/MapService";
+import { StyleSheet, Image, TextInput, DeviceEventEmitter, Text, View,ScrollView , TouchableOpacity, addons, Linking } from 'react-native';
+import {GetPhoto,GetPlaceDetails} from "../services/mapService";
 import StarRate from "../components/StarRate";
 import PriceRate from "../components/PriceRate";
 import Loading from './Loading';
 import { Map } from "react-native-feather";
 
-export default function PlaceView({route, navigation, AnimateToLocation}) {
+export default function PlaceView({route, navigation}) {
 
     let place = route.params.place;
-    const [imageUrl,setImageUrl] = useState(null);
+    const [imageUrl,setImageUrl] = useState(require('../assets/default-image.jpg'));
     const [detailInfo,setDetailInfo] = useState(null);
 
     useEffect(()=>{
 
       let isMounted = true;
       
+      /*
       if(place.photos){
       GetPhoto(place.photos[0].photo_reference,400).then(res =>{
         if(isMounted)
-          setImageUrl(res);
+          setImageUrl({uri:res});
       });
-      }else{
-        setImageUrl('none');
-      };
-
+      }
+      */
+     
       GetPlaceDetails(place.place_id).then(res =>{
         setDetailInfo(res);
       })
+
       return () => { isMounted = false };
 
     },[])
@@ -38,10 +39,16 @@ export default function PlaceView({route, navigation, AnimateToLocation}) {
     const openPhone = (phone) => {
       Linking.openURL(`tel:${phone}`);
     }
+    const viewOnMap = () => {
 
-    const OnDirections = () => {
-      //navigation.pop();
-      //AnimateToLocation();
+      const location = {
+        coords:{
+          latitude:place.geometry.location.lat,
+          longitude:place.geometry.location.lng,
+        }
+      }
+      navigation.navigate("Map");
+      DeviceEventEmitter.emit('event.viewOnMap', location);
     }
 
   return (
@@ -50,7 +57,7 @@ export default function PlaceView({route, navigation, AnimateToLocation}) {
       <ScrollView style={styles.container}>
 
           <View>
-          {imageUrl ? <Image style={{...styles.image,width: '100%', height: 200}} source={{uri: imageUrl}}/> : <View style={styles.imageLoad}><Loading/></View>}
+            <Image style={{...styles.image,width: '100%', height: 200}} source={imageUrl}/>
           </View>
         <View style={{padding: 20, paddingTop: 5}}>
           <Header place={place}/>
@@ -84,8 +91,7 @@ export default function PlaceView({route, navigation, AnimateToLocation}) {
           
         </View>
       </ScrollView>
-      
-        <Directions OnDirections={OnDirections} />
+        <Directions viewOnMap={viewOnMap}/>
     </View>
   );
 }
@@ -123,10 +129,10 @@ const Header = ({place,showHourPanel}) => {
   )
 }
 
-const Directions = ({OnDirections}) => {
+const Directions = ({viewOnMap}) => {
   return(
   <TouchableOpacity style={styles.DirectionsSection}
-  onPress={OnDirections}
+  onPress={viewOnMap}
   >
     <Map stroke="#fff" strokeWidth={2} width={24} height={24} />
     <Text style={styles.DirectionsText}>View On Map</Text>

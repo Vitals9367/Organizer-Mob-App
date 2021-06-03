@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {getValueFromStore, saveToStore, deleteFromStore} from './SecureStore';
+import {getValueFromStore, saveToStore, deleteFromStore} from './secureStore';
 
 const token = getValueFromStore('token');
 

@@ -11,22 +11,22 @@ import {
     REGISTER_FAILURE,
     REGISTER_SUCCESS_MODAL_FALSE,
     REGISTER_FAIL_MODAL_FALSE,
-    LOGIN_SUCCESS_MODAL_FALSE,
-} from '../actions/types';
-import {getValueFromStore, saveToStore, deleteFromStore} from '../../utils/SecureStore';
+    LOGIN_FAIL_MODAL_FALSE,
+} from './types';
+import {getValueFromStore, saveToStore, deleteFromStore} from '../../utils/secureStore';
 
 export const LogoutAction = () =>{
 
     return (dispatch) => {
       dispatch(LogoutRequest());
       axios
-          .post("https://orgapi11.herokuapp.com/auth/logout")
+          .post("https://orgmobapi.herokuapp.com/auth/logout")
           .then(res => {
               deleteFromStore('token');
               dispatch(LogoutSuccess());
           })
           .catch(err => {
-              dispatch(LogoutFailure(err));
+              dispatch(LogoutFailure(err.response.data));
           });
     }
 }
@@ -34,14 +34,14 @@ export const LoginAction = (user) =>{
     return (dispatch) => {
         dispatch(LoginRequest());
         axios
-            .post("https://orgapi11.herokuapp.com/auth/login",user)
+            .post("https://orgmobapi.herokuapp.com/auth/login",user)
             .then(res => {
                 saveToStore('token',res.data.Authorization);
                 axios.defaults.headers.common['Authorization'] = res.data.Authorization;
                 dispatch(LoginSuccess(res.data));
             })
             .catch(err => {
-                dispatch(LoginFailure(err));
+                dispatch(LoginFailure(err.response.data));
             });
     }
 }
@@ -50,14 +50,14 @@ export const RegisterAction = (user) =>{
     return (dispatch) => {
         dispatch(RegisterRequest());
         axios
-            .post("https://orgapi11.herokuapp.com/user/",user)
+            .post("https://orgmobapi.herokuapp.com/user/",user)
             .then(res => {
                 //SecureStore.setItemAsync('access_token',res.data.accessToken);
                 //SecureStore.setItemAsync('refresh_token',res.data.refreshToken);
                 dispatch(RegisterSuccess(res.data));
             })
             .catch(err => {
-                dispatch(RegisterFailure(err));
+                dispatch(RegisterFailure(err.response.data));
             });
     }
 }
@@ -118,7 +118,7 @@ export const RegisterFailure = error => {
 }
 export const LoginFailModalFalse = () => {
   return {
-    type: LOGIN_SUCCESS_MODAL_FALSE,
+    type: LOGIN_FAIL_MODAL_FALSE,
   }
 }
 export const RegisterSuccessModalFalse = () => {

@@ -1,7 +1,7 @@
 import React,{useState} from 'react';
 import { StyleSheet, Image, TextInput, Text, View, TouchableOpacity, addons } from 'react-native';
 import { Search } from "react-native-feather";
-import GetSearch from "../services/SearchService";
+import GetSearch from "../services/searchService";
 
 
 export default function SearchPage({ navigation }) {
@@ -61,10 +61,6 @@ export default function SearchPage({ navigation }) {
           <View style={styles.row}>
 
             {/* image */}
-            <Image
-            style={{width:52,height:52,borderRadius:100, marginRight:20}} 
-            source={ require('../assets/person.png')}
-            />
 
             {/* name */}
             <Text style={styles.rowTxt}>{item.username}</Text>

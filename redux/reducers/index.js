@@ -1,5 +1,5 @@
-import AuthReducer from './AuthReducer';
-import MapReducer from './MapReducer';
+import AuthReducer from './authReducer';
+import MapReducer from './mapReducer';
 import { combineReducers } from 'redux';
 
 /* combining all reducers */

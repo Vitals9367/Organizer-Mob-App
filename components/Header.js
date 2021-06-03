@@ -16,7 +16,7 @@ function Header({ currentUser }) {
         <TouchableOpacity
         onPress={()=> navigation.navigate("Home")}
         >
-          <Text style={styles.txt}>Hello, {currentUser.username}</Text>
+          <Text style={styles.txt}>Organizer</Text>
         </TouchableOpacity>
       </View>
 

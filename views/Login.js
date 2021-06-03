@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, Text, View, TouchableOpacity, addons } from 'react-native';
 import { connect } from 'react-redux';
-import { LoginAction, LoginFailModalFalse, RegisterSuccessModalFalse, RegisterFailModalFalse } from '../redux/actions/AuthActions';
+import { LoginAction, LoginFailModalFalse, RegisterSuccessModalFalse, RegisterFailModalFalse } from '../redux/actions/authActions';
 import LoginHeader from '../src/icons/LoginHeader';
-import {checkLenghtMin,checkLenghtMax,checkEmail} from '../utils/Validators';
+import {checkLenghtMin,checkLenghtMax,checkEmail} from '../utils/validators';
 import CustomModal from '../components/modals/CustomModal';
 import {RegisterSuccesfull, RegisterFailed, LoginFailed} from '../components/modals/Data';
 
-function Login({ navigation, loginUser, showRegSuccess, showRegFail, showLoginFail, LoginFailFalse, RegisterSuccessFalse, RegisterFailFalse}) {
+function Login({ navigation, loginUser, error, showRegSuccess, showRegFail, showLoginFail, LoginFailFalse, RegisterSuccessFalse, RegisterFailFalse}) {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -23,6 +23,10 @@ function Login({ navigation, loginUser, showRegSuccess, showRegFail, showLoginFa
       setEmailError(null);
       setPasswordError(null);
 
+      if(email.trim() == ''){
+        setEmailError("Please enter email!");
+        return;
+      }
       if(!checkLenghtMin(email,4)){
         setEmailError("Email is too short!");
         return;
@@ -33,10 +37,6 @@ function Login({ navigation, loginUser, showRegSuccess, showRegFail, showLoginFa
       }
       if(!checkEmail(email)){
         setEmailError("Invalid email!");
-        return;
-      }
-      if(email.trim() == ''){
-        setEmailError("Please enter email!");
         return;
       }
       if(password.trim() == ''){
@@ -59,11 +59,11 @@ function Login({ navigation, loginUser, showRegSuccess, showRegFail, showLoginFa
         setShowRegSucc(false);
         RegisterSuccessFalse();
         }}/>
-      <CustomModal data={RegisterFailed} show={showRegF} disable={()=>{
+      <CustomModal data={RegisterFailed} res={error.message} show={showRegF} disable={()=>{
         setShowRegFail(false);
         RegisterFailFalse();
         }}/>
-      <CustomModal data={LoginFailed} show={showLoginF} disable={()=>{
+      <CustomModal data={LoginFailed} res={error.message} show={showLoginF} disable={()=>{
         setShowLoginFail(false);
         LoginFailFalse();
         }}/>
@@ -221,6 +221,7 @@ const mapStateToProps = state => {
         showRegSuccess : state.Auth.showRegSuccess,
         showRegFail : state.Auth.showRegFail,
         showLoginFail : state.Auth.showLoginFail,
+        error: state.Auth.error,
     }
 }
 const mapDispatchToProps = dispatch => {

@@ -1,21 +1,101 @@
-import React from 'react';
-import { StyleSheet, TextInput, Text, View, TouchableOpacity, addons, Image } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { StyleSheet, TextInput, Text, View, TouchableOpacity, Image } from 'react-native';
 import { connect } from 'react-redux';
-import { LogOut } from "react-native-feather";
-import { LogoutAction } from '../redux/actions/AuthActions';
+import { LogOut, Loader } from "react-native-feather";
+import { LogoutAction } from '../redux/actions/authActions';
+import {GetUserImage, UploadUserImage} from '../services/imageService';
+import Alert from '../components/alerts/Alert';
+import * as ImagePicker from 'expo-image-picker';
 
 function Profile({ currentUser,logOutUser,navigation }) {
 
-  const onLogOut = ()  => {
-    logOutUser()
+  const [url,setUrl] = useState(null);
+  const [loadingImg,setLoadingImg] = useState(true);
+
+  const [imageClicked,setImageClicked] = useState(false);
+
+  const [visible, setVisible] = React.useState(false);
+  const [text,setText] = useState('null');
+
+  const toggleAlert = React.useCallback(() => {
+    setVisible(!visible);
+  }, [visible]);
+  
+  const getImage = () => {
+    
+    setLoadingImg(true);
+
+    GetUserImage(currentUser.username).then(res => {
+      setUrl(res.url);
+      setLoadingImg(false);
+    }).catch((err) => {
+      setText(err.message);
+      setVisible(true);
+      setLoadingImg(false);
+    });
   }
+  
+  const onImageClick = (state) => {
+    
+    if(loadingImg)
+      return;
+
+    setImageClicked(state);
+
+  }
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    return result;
+  };
+  const permission = async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
+          return;
+        }
+      }
+    };
+
+  const onUpload = async () => {
+  
+    await permission();
+
+    let result = await pickImage();
+
+    if (result){
+          const res = await UploadUserImage(currentUser.username,result);
+          console.log(res);
+    }
+  }
+
+  useEffect(()=>{
+
+    let isMounted = true;
+
+    if(isMounted)
+      getImage();
+
+    return () => {isMounted = false};
+
+  },[]);
 
   return (
     <View style={styles.container}>
+
+      <Alert visible={visible} toggleAlert={toggleAlert} text={text}/>
+
       {/* Logout button */}
           <TouchableOpacity
             style={styles.exit}
-            onPress={()=> onLogOut()}
+            onPress={()=> logOutUser()}
             >
               <LogOut stroke="white" strokeWidth={2.5} width={26} height={26}/>
           </TouchableOpacity>
@@ -23,13 +103,30 @@ function Profile({ currentUser,logOutUser,navigation }) {
           {/* Profile panel */}
         <View style={styles.panel}>
 
-          {/* Profile icon */}
-            <View style={styles.icon}>
-                <Image
-                style={{width:iconSize,height:iconSize,borderRadius:iconSize}} 
-                source={ require('../assets/person.png')}
-                />
-            </View>
+          {imageClicked
+            /* Upload image  */
+          && <TouchableOpacity style={{...styles.icon,position:'absolute',zIndex:99,backgroundColor:'rgba(0,0,0,0.5)'}}
+          >
+            <TouchableOpacity style={styles.btn} onPress={()=>{onUpload()}}>
+              <Text style={styles.btn_txt}>Upload</Text>
+            </TouchableOpacity>
+          </TouchableOpacity>}
+
+            <TouchableOpacity style={styles.icon} onPress={()=>{onImageClick(true)}}>
+              {/* Profile icon */}
+              {loadingImg 
+              ? <Image
+              style={{width:38,height:38}} 
+              source={ require('../assets/tenor.gif')}
+              />
+              : <Image
+              style={{width:iconSize,height:iconSize,borderRadius:iconSize}} 
+              source={{uri: url}}
+              onLoadEnd={() => {setLoadingImg(false)}}
+              />
+              }
+
+            </TouchableOpacity>
 
             {/* Profile username */}
             <View style={styles.info}>
@@ -108,7 +205,7 @@ const styles = StyleSheet.create({
       justifyContent:'center',
       position:'absolute',
       top:-75,
-      backgroundColor:'#D3D3D3',
+      backgroundColor:'black',
       width:iconSize,
       height:iconSize,
       borderRadius:100,

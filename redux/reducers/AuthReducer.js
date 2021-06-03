@@ -10,7 +10,7 @@ import {
     REGISTER_FAILURE,
     REGISTER_SUCCESS_MODAL_FALSE,
     REGISTER_FAIL_MODAL_FALSE,
-    LOGIN_SUCCESS_MODAL_FALSE,
+    LOGIN_FAIL_MODAL_FALSE,
 } from '../actions/types';
 
 const initialState = {
@@ -114,7 +114,7 @@ const AuthReducer = (state = initialState, action) =>{
                 showRegFail: false,
             }
 
-        case LOGIN_SUCCESS_MODAL_FALSE:
+        case LOGIN_FAIL_MODAL_FALSE:
             return{
                 ...state,
                 showLoginFail: false,

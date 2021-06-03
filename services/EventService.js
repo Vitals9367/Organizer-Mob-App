@@ -1,31 +1,30 @@
 import axios from 'axios';
-import {getValueFromStore, saveToStore, deleteFromStore} from '../utils/SecureStore';
+import {getValueFromStore, saveToStore, deleteFromStore} from '../utils/secureStore';
+import requests from '../utils/requests';
 
 /* Gets all user events */
-function GetEvents(){
+async function GetEvents(){
 
-    return axios
-    .get("https://orgapi11.herokuapp.com/event/")
-    .then(res => {
+    try {
+        const res = await axios
+            .get(requests.getEvents);
         return res.data;
-    })
-    .catch(err => {
+    } catch (err) {
         return err.data;
-    });
+    }
 
 }
 
 /* creates new event */
-function CreateEvent(data){
+async function CreateEvent(data){
 
-    return axios
-    .post("https://orgapi11.herokuapp.com/event/",)
-    .then(res => {
+    try {
+        const res = await axios
+            .post(requests.createEvent);
         return res.data;
-    })
-    .catch(err => {
+    } catch (err) {
         return err.data;
-    });
+    }
 
 } 
 

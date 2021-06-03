@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, TextInput, Text, View, TouchableWithoutFeedback,TouchableOpacity, addons } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Moment from 'moment';
-import {CreateEvent} from '../services/EventService';
+import {CreateEvent} from '../services/eventService';
 
 export default function ShowAddPanel(props) {
 

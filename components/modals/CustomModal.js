@@ -1,8 +1,7 @@
 import React,{useState} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Modal  } from 'react-native';
-import RegisteredImage from '../../src/icons/RegisteredImage';
 
-function CustomModal({data, show, disable}) {
+function CustomModal({data, show, disable, res}) {
 
   return (
     <Modal visible={show} transparent={true} animationType={'fade'}>
@@ -10,7 +9,10 @@ function CustomModal({data, show, disable}) {
       <View style={styles.panel}>
         <Text style={data.fail ? styles.headerFail : styles.headerSuccess}>{data.top}</Text>
         {data.image}
-        <Text>{data.text}</Text>
+        {res
+        ? <Text>{res}</Text>
+        : <Text>{data.text}</Text>
+        }
         <TouchableOpacity style={styles.btn}
         onPress={disable}
         >
@@ -53,7 +55,7 @@ const styles = StyleSheet.create({
     fontSize:22,
     color:'#f50000',
   },   
-    btn: {
+  btn: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -78,7 +80,7 @@ const styles = StyleSheet.create({
 
   btn_txt: {
     color: 'white',
-    fontSize:22,
+    fontSize:16,
     fontWeight:'bold',
   },
 });

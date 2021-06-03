@@ -1,44 +1,40 @@
 import axios from 'axios';
+import requests from '../utils/requests';
 
-const key = "AIzaSyABxodUEwkxWuhorogJitnKpIIiTdKga9U";
+async function GetNearby(location){
 
-function GetNearby(location){
-
-    return axios
-    .get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.coords.latitude},${location.coords.longitude}&radius=30000&type=food&key=${key}`)
-    .then(res => {
+    try {
+        const res = await axios
+            .get(requests.getPlaces + `&location=${location.coords.latitude},${location.coords.longitude}`);
         return res.data.results;
-    })
-    .catch(err => {
+    } catch (err) {
         return err.data;
-    });
+    }
 
 }
 
-function GetPlaceDetails(place_id){
+async function GetPlaceDetails(place_id){
 
-    return axios
-    .get(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=opening_hours,review,website,formatted_phone_number&key=${key}`)
-    .then(res => {
+    try {
+        const res = await axios
+            .get(requests.getPlaceDetails + `&place_id=${place_id}`);
         return res.data.result;
-    })
-    .catch(err => {
+    } catch (err) {
         return err.data;
-    });
+    }
 
 }
 
-function GetPhoto(reference,maxwidth){
+async function GetPhoto(reference,maxwidth){
 
-    return axios
-    .get(`https://maps.googleapis.com/maps/api/place/photo?maxwidth=${maxwidth}&photoreference=${reference}&key=${key}`)
-    .then(res => {
+    try {
+        const res = await axios
+            .get(requests.getPlacePhoto + `$maxwidth=${maxwidth}&photoreference=${reference}`);
         return res.request.responseURL;
-    })
-    .catch(err => {
+    } catch (err) {
         return err.data;
-    })
+    }
 
 }
 
-export {GetNearby, GetPhoto,GetPlaceDetails, key};
+export {GetNearby, GetPhoto,GetPlaceDetails};

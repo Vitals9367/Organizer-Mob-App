@@ -3,8 +3,9 @@ import {
     GET_PLACES_REQUEST,
     GET_PLACES_SUCCESS,
     GET_PLACES_FAILURE,
-} from '../actions/types';
-import {GetNearby} from "../../services/MapService";
+    SAVE_LOCATION,
+} from './types';
+import {GetNearby} from "../../services/mapService";
 
 export const GetPlacesAction = (location) =>{
 
@@ -17,9 +18,16 @@ export const GetPlacesAction = (location) =>{
         dispatch(PlacesSuccess(res));
       })
       .catch(err => {
-        dispatch(PlacesFailure(err));
+        dispatch(PlacesFailure(err.response.data));
       })
     }
+}
+
+export const SaveLocation = location => {
+  return {
+    type: SAVE_LOCATION,
+    payload: location
+  }
 }
 
 export const PlacesRequest = () => {

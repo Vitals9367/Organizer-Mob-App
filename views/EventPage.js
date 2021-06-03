@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, TextInput, Text, View, TouchableOpacity, addons } from 'react-native';
 import { PlusCircle } from "react-native-feather";
 import ShowAddPanel from '../components/ShowAddPanel';
-import {GetEvents} from "../services/EventService";
+import {GetEvents} from "../services/eventService";
 
 export default function EventPage() {
 

@@ -2,12 +2,13 @@ import {
     GET_PLACES_REQUEST,
     GET_PLACES_SUCCESS,
     GET_PLACES_FAILURE,
+    SAVE_LOCATION,
 } from '../actions/types';
 
 const initialState = {
-    placeList: null,
+    placeList: [],
     loading:false,
-    savedPlace: null,
+    savedLocation: null,
 }
 
 const MapReducer = (state = initialState, action) =>{
@@ -28,6 +29,11 @@ const MapReducer = (state = initialState, action) =>{
                 ...state,
                 placeList: action.payload,
                 loading: false,
+            }
+        case SAVE_LOCATION:
+            return{
+                ...state,
+                savedLocation: action.payload,
             }
         default:
             return state

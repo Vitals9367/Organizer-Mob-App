@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     flex:1,
   },
   txt:{
-    fontSize: 22,
+    fontSize: 18,
     fontWeight:'bold',
   },
   selectBoxRow:{

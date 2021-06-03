@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, Text, View, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { RegisterAction } from '../redux/actions/AuthActions';
+import { RegisterAction } from '../redux/actions/authActions';
 import RegisterHeader from '../src/icons/RegisterHeader';
-import {checkLenghtMin,checkLenghtMax,checkEmail} from '../utils/Validators';
+import {checkLenghtMin,checkLenghtMax,checkEmail} from '../utils/validators';
 
 function Register({ navigation, registerUser }) {
 
@@ -116,6 +116,7 @@ function Register({ navigation, registerUser }) {
         placeholder="Password"
         textContentType='password'
         placeholderTextColor='#B9B9B9'
+        secureTextEntry={true}
         />
 
         {/* Confirm password input */}
