@@ -361,7 +361,7 @@ function MapPage({navigation, saveLocation, savedLocation }) {
         <MapViewDirections
           origin={{latitude:location.coords.latitude,longitude:location.coords.longitude}}
           destination={{ latitude:selectedPlace.geometry.location.lat,longitude:selectedPlace.geometry.location.lng}}
-          apikey="AIzaSyABxodUEwkxWuhorogJitnKpIIiTdKga9U"
+          apikey="your key"
           strokeWidth={3}
           strokeColor="green"
           mode={mode}
