@@ -139,15 +139,6 @@ function Register({ navigation, registerUser }) {
 
         </TouchableOpacity>
 
-        {/* Facebook register */}
-        <TouchableOpacity
-        style={{...styles.btn,backgroundColor:'#5678BF',marginTop:0}}
-        onPress={()=> onRegister()}
-        >
-        <Text style={styles.btn_txt}>facebook</Text>
-
-        </TouchableOpacity>
-
         {/* Navigation to login */}
         <TouchableOpacity
         onPress={()=> navigation.navigate("Login")}

@@ -1,9 +1,7 @@
 import React,{useState, useEffect, useRef} from 'react';
-import { StyleSheet, FlatList, Image, TextInput, Text, View, TouchableOpacity, addons } from 'react-native';
+import { StyleSheet, FlatList, Image, TextInput, Text, View, TouchableOpacity } from 'react-native';
 
 import { Search, Filter } from "react-native-feather";
-
-import { connect } from 'react-redux';
 
 //Components
 import PriceRate from '../components/PriceRate';
@@ -14,22 +12,25 @@ import FiltersModal from '../components/modals/FiltersModal';
 import GetSearch from "../services/searchService";
 import {GetPhoto} from "../services/mapService";
 
+import {GetNearby, GetPlacesNextPage} from '../services/mapService';
+
 const Item = ({item, navigation}) => {
     
     const [url,setUrl] = useState(require('../assets/default-image.jpg'));
-
+    
     useEffect(() => {
 
       let isMounted = true;
 
-      /*
-      if(item.photos){
-        GetPhoto(item.photos[0].photo_reference,400).then(res =>{
-          if(isMounted)
-            setUrl({uri:res});
-        });
-      }
-      */
+      (async () => {
+        if(item.photos){
+          await GetPhoto(item.photos[0].photo_reference,200).then(res =>{
+            if(isMounted)
+              setUrl({uri:res});
+          });
+        }
+      })();
+
       return () => { isMounted = false };
     })
 
@@ -48,18 +49,25 @@ const Item = ({item, navigation}) => {
           <View style={styles.rowInfo}>
             <Text style={styles.name}>{item.name}</Text>
             <Text >{item.vicinity}</Text>
-            {item.opening_hours && item.opening_hours.open_now
-              ? <Text style={{...styles.open,color:'green'}}>OPEN</Text>
-              : <Text style={{...styles.open,color:'red'}}>CLOSED</Text>}
+            {item.opening_hours
+              ? (item.opening_hours.open_now ? <Text style={{...styles.open,color:'green'}}>OPEN</Text> : <Text style={{...styles.open,color:'red'}}>CLOSED</Text>)
+              : (<Text style={{...styles.open,color:'#bdbdbd'}}>open?</Text>)
+            }
             {item.price_level && <PriceRate  rating={item.price_level} size={22} />}
-            <StarRate style={styles.rating} rating={item.rating} size={26} margin={5} />
+            {item.rating
+            ? <StarRate style={styles.rating} rating={item.rating} size={26} margin={5} />
+            : <Text>No ratings</Text>}
           </View>
         </View>
     </TouchableOpacity> 
   )
 };
 
-function PlaceList({ navigation, places }) {
+function PlaceList({ navigation, route }) {
+
+  const location = route.params.location;
+
+  const [places,setPlaces] = useState([]);
 
   const [showFiltersModal,setShowFiltersModal] = useState(false);
 
@@ -67,6 +75,53 @@ function PlaceList({ navigation, places }) {
   const [list,setList] = useState(places);
 
   const temp_list = useRef(places);
+  
+  useEffect(() => {
+  (async () => {
+    await fetchPlaces(location);
+    temp_list.current = places;
+  })();
+    
+  },[])
+
+  const fetchNextPage = async (token) => {
+    try{
+      let res = await GetPlacesNextPage(token);
+      return res;
+    }catch (err){
+      console.log('Failed to fetch next page locations!')
+    }
+  }
+  const fetchPlaces = async (location) => {
+    try{
+
+      let array = [];
+
+      let resData = await GetNearby(location,20000);
+      array = array.concat(resData.results);
+
+      let nextPageToken = resData.next_page_token;
+
+      while(nextPageToken != null || nextPageToken != undefined){
+        let res = await fetchNextPage(nextPageToken);
+        array = array.concat(res.results);
+
+        console.log(' -- Next page fetched');
+
+        nextPageToken = res.next_page_token;
+        if(nextPageToken === null)
+          break;
+      }
+
+    
+      setPlaces(array);
+      setList(array);
+      console.log('Places fetched');
+
+    }catch (err){
+      console.log('Failed to fetch locations!')
+    }
+  }
 
   const onFilter = (filters) => {
 
@@ -229,11 +284,4 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = state => {
-
-    return{
-        places : state.Map.placeList,
-    }
-}
-
-export default  connect (mapStateToProps) (PlaceList)
+export default PlaceList

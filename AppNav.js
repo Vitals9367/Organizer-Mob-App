@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {Login,
 Register,
@@ -42,7 +42,7 @@ const Main = createStackNavigator();
 const MainScreen = () => (
   <Main.Navigator initialRouteName="Home"
   screenOptions={{
-    headerTitle: () => <Header/>,
+    headerTitle: () => <Header />,
     headerTintColor: '#00BEB3',
     headerHideShadow: true,
     headerStyle: {

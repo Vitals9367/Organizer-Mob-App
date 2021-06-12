@@ -103,15 +103,6 @@ function Login({ navigation, loginUser, error, showRegSuccess, showRegFail, show
         <Text style={styles.btn_txt}>Sing In</Text>
 
         </TouchableOpacity>
-        
-        {/* Login with facebook */}
-        <TouchableOpacity
-        style={{...styles.btn,backgroundColor:'#5678BF',marginTop:0}}
-        onPress={()=> onLogin()}
-        >
-        <Text style={styles.btn_txt}>facebook</Text>
-
-        </TouchableOpacity>
 
         {/* Navigation to register */}
         <TouchableOpacity

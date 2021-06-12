@@ -23,6 +23,13 @@ function FiltersModal({ show, disable,onFilter}) {
         disable();
     }
 
+    const clearFilters = () => {
+        setOpenFilter("both");
+        setPriceLevel("all");
+        setRatingFrom("none");
+        setRatingTo("none");
+    }
+
   return (
     <Modal visible={show} transparent={true} animationType={'fade'}>
       <View style={styles.container}>
@@ -32,78 +39,93 @@ function FiltersModal({ show, disable,onFilter}) {
             <View style={styles.row}>
                 <View style={styles.row_column}>
                     <Text>Open/Closed</Text>
-                    <Picker
-                    style={{ height: 20, width: 120 }}
-                    selectedValue={openFilter}
-                    onValueChange={(itemValue, itemIndex) =>
-                        setOpenFilter(itemValue)
-                    }
-                    >
-                        <Picker.Item label="Both" value="both" />
-                        <Picker.Item label="Open" value="open" />
-                        <Picker.Item label="Closed" value="closed" />
-                    </Picker>
+                    <View style={styles.picker_view}>
+                        <Picker
+                        style={styles.picker}
+                        selectedValue={openFilter}
+                        onValueChange={(itemValue, itemIndex) =>
+                            setOpenFilter(itemValue)
+                        }
+                        >
+                            <Picker.Item label="Both" value="both" />
+                            <Picker.Item label="Open" value="open" />
+                            <Picker.Item label="Closed" value="closed" />
+                        </Picker>
+                    </View>
                 </View>
                 <View style={styles.row_column}>
                     <Text>Price Level</Text>
-                    <Picker
-                    style={{ height: 20, width: 120 }}
-                    selectedValue={priceLevel}
-                    onValueChange={(itemValue, itemIndex) =>
-                        setPriceLevel(itemValue)
-                    }
-                    >
-                        <Picker.Item label="All" value="all" />
-                        <Picker.Item label="1" value={1} />
-                        <Picker.Item label="2" value={2} />
-                        <Picker.Item label="3" value={3} />
-                    </Picker>
+                    <View style={styles.picker_view}>
+                        <Picker
+                        style={styles.picker}
+                        selectedValue={priceLevel}
+                        onValueChange={(itemValue, itemIndex) =>
+                            setPriceLevel(itemValue)
+                        }
+                        >
+                            <Picker.Item label="All" value="all" />
+                            <Picker.Item label="0" value={0} />
+                            <Picker.Item label="1" value={1} />
+                            <Picker.Item label="2" value={2} />
+                            <Picker.Item label="3" value={3} />
+                            <Picker.Item label="4" value={4} />
+                        </Picker>
+                    </View>
                 </View>
             </View>
             <View style={styles.row}>
                 <View style={styles.row_column}>
                     <Text>Rating From</Text>
-                    <Picker
-                    style={{ height: 40, width: 120 }}
-                    selectedValue={ratingFrom}
-                    onValueChange={(itemValue, itemIndex) =>
-                        setRatingFrom(itemValue)
-                    }
-                    >
-                        <Picker.Item label="---" value="none" />
-                        {array.map(id => {
-                            
-                            if(ratingTo == 'none')
-                                return <Picker.Item key={id} label={id.toString()} value={id} />
-                            if(id <= ratingTo)
-                                return <Picker.Item key={id} label={id.toString()} value={id} />
-                            else
-                                return;
-                        })}
-                    </Picker>
+                    <View style={styles.picker_view}>
+                        <Picker
+                        style={styles.picker}
+                        selectedValue={ratingFrom}
+                        onValueChange={(itemValue, itemIndex) =>
+                            setRatingFrom(itemValue)
+                        }
+                        >
+                            <Picker.Item label="---" value="none" />
+                            {array.map(id => {
+                                
+                                if(ratingTo == 'none')
+                                    return <Picker.Item key={id} label={id.toString()} value={id} />
+                                if(id <= ratingTo)
+                                    return <Picker.Item key={id} label={id.toString()} value={id} />
+                                else
+                                    return;
+                            })}
+                        </Picker>
+                    </View>
                 </View>
                 <View style={styles.row_column}>
                     <Text>Rating To</Text>
-                    <Picker
-                    style={{ height: 40, width: 120 }}
-                    selectedValue={ratingTo}
-                    onValueChange={(itemValue, itemIndex) =>
-                        setRatingTo(itemValue)
-                    }
-                    >
-                        <Picker.Item label="---" value="none" />
-                        {array.map(id => {
+                    <View style={styles.picker_view}>
+                        <Picker
+                        style={styles.picker}
+                        selectedValue={ratingTo}
+                        onValueChange={(itemValue, itemIndex) =>
+                            setRatingTo(itemValue)
+                        }
+                        >
+                            <Picker.Item label="---" value="none" />
+                            {array.map(id => {
 
-                            if(ratingFrom == 'none')
-                                return <Picker.Item key={id} label={id.toString()} value={id}/>
-                            if(id >= ratingFrom)
-                                return <Picker.Item key={id} label={id.toString()} value={id}/>
-                            else
-                                return;
-                        })}
-                    </Picker>
+                                if(ratingFrom == 'none')
+                                    return <Picker.Item key={id} label={id.toString()} value={id}/>
+                                if(id >= ratingFrom)
+                                    return <Picker.Item key={id} label={id.toString()} value={id}/>
+                                else
+                                    return;
+                            })}
+                        </Picker>
+                    </View>
                 </View>
             </View>
+            <TouchableOpacity style={{alignSelf:'center', marginTop:10}}
+            onPress={() => clearFilters()}
+            >
+                <Text style={{color:'#3661ff', fontWeight:'bold',fontSize:14}}>X Clear All Filters</Text>
+            </TouchableOpacity>
         </View>
         <View style={styles.row}>
             <TouchableOpacity style={{...styles.btn,backgroundColor:'#f7382a'}}
@@ -180,5 +202,15 @@ const styles = StyleSheet.create({
   },
   row_column:{
       margin: 10,
+  },
+  picker:{
+    height: 30,
+    width: 120,
+    
+  },
+  picker_view:{
+    backgroundColor:'#e0e0e0',
+    marginTop:5,
+    borderRadius:15,
   }    
 });
