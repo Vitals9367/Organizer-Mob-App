@@ -8,6 +8,8 @@ Made during fourth semester of my studies at Kaunas University of Applied Scienc
 ***Hosting ->*** Heroku<br/>
 ***Maps ->*** Google API<br/>
 
+🔗 [Organizer Flask API](https://github.com/Vitals9367/Organizer_mob_app_api)
+
 *Functions:*
 - User registration
 - User login/logout
@@ -17,7 +19,3 @@ Made during fourth semester of my studies at Kaunas University of Applied Scienc
 - Info about restaurants: reviews, rating, work hours, etc...
 - Restaurants displayed in list
 - List filters and search 
-
-🔗 [Organizer Flask API](https://github.com/Vitals9367/Organizer_mob_app_api)
-
-
